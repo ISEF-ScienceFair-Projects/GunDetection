@@ -20,7 +20,7 @@ class YoloObjD:
     def process_frame(self, frame):
         img = cv2.resize(frame, None, fx=0.4, fy=0.4)
         height, width, _ = img.shape
-        blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+        blob = cv2.dnn.blobFromImage(img, 0.00092, (416, 416), (0, 0, 0), True, crop=False)
         self.net.setInput(blob)
         outs = self.net.forward(self.output_layers)
 
