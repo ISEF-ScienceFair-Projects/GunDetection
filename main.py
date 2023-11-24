@@ -15,12 +15,12 @@ def main():
     cameras = [(cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
                (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})]
 
-    for cam, window_name, properties in cameras:
-        cam.set(cv2.CAP_PROP_FPS, properties["fps"])
-        cam.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
-        cam.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
+    for cap, window_name, properties in cameras:
+        cap.set(cv2.CAP_PROP_FPS, properties["fps"])
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
 
-    print(cv2.useOptimized())
+    #print(cv2.useOptimized())
 
     run_gun_detection(yolo_detector, cameras)
 
