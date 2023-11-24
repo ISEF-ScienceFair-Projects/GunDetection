@@ -55,7 +55,7 @@ def run_gun_detection(yolo_detector, cameras):
             consecutive_gun_detected_count += 1
             if consecutive_gun_detected_count >= buffer_iteration_count:
                 print("Gunman detected for", buffer_iteration_count, "ticks. Clothes detection gonna fire!!")
-                cv2.imwrite("gunImages/gunMan.jpg", combined_frame)
+                cv2.imwrite("gunImages/gunMan.jpg", combined_frame)    
                 run_clothes_detection(cameras)
                 return
         else:

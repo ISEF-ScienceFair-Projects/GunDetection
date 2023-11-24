@@ -62,10 +62,7 @@ class YoloObjD:
         return img, len(boxes)
 
     def calculate_contrast_font_color(self, img, x, y, w, h):
-        roi = img[y:y+h, x:x+w]
-        mean_lab = np.mean(cv2.cvtColor(roi, cv2.COLOR_BGR2LAB), axis=(0, 1))
-        lightness = mean_lab[0]
-        contrast_color = [0, 0, 0] if lightness < 50 else [255, 255, 255]
+        contrast_color = [0, 0, 0]
         return contrast_color
 
 def run(yolo_detector, cam, window_name):
