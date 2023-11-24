@@ -1,5 +1,5 @@
 import cv2
-from clothes.cloth_detection import *
+from cloth.cloth_detection import *
 cap = cv2.VideoCapture(0)  # 0 for default camera
 model = Load_DeepFashion2_Yolov3()
 while True:
