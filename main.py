@@ -4,13 +4,9 @@ import numpy as np
 class YoloObjD:
     def __init__(self, weight_path, config_path):
         self.net = cv2.dnn.readNet(weight_path, config_path)
-
-        # GPU magic
         self.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
-
         self.classes = ["Gun"]
-
         self.layer_names = self.net.getLayerNames()
         self.output_layers = self.net.getUnconnectedOutLayers()
 
@@ -19,14 +15,12 @@ class YoloObjD:
         else:
             self.output_layers = [self.layer_names[i[0] - 1] for i in self.output_layers]
 
-        self.colors = [0,0,0]
+        self.colors = [0, 0, 0]
 
     def process_frame(self, frame):
         img = cv2.resize(frame, None, fx=0.4, fy=0.4)
         height, width, _ = img.shape
-
         blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
-
         self.net.setInput(blob)
         outs = self.net.forward(self.output_layers)
 
@@ -63,11 +57,12 @@ class YoloObjD:
                 cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
 
         return img, len(boxes)
+
 def run_cameras(cameras):
     while True:
         combined_frames = []
 
-        for cam, window_name in cameras:
+        for cam, window_name, properties in cameras:
             ret, frame, boxes = run(cam, window_name)
             if not ret:
                 continue
@@ -91,8 +86,6 @@ def run_cameras(cameras):
     for cam, _ in cameras:
         cam.release()
     cv2.destroyAllWindows()
-
-
 def run(cam, window_name):
     ret, frame_info = cam.read()
     if not ret:
@@ -105,13 +98,17 @@ weight_path = 'yolo-obj_last.weights'
 config_path = 'gun.cfg'
 yolo_detector = YoloObjD(weight_path, config_path)
 
-# Camera setup
+# init
 cam1 = cv2.VideoCapture(0)
 cam2 = cv2.VideoCapture(1)
-# cam3 = cv2.VideoCapture(2)
+cameras = [(cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
+           (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})]
 
-# List of cameras to be processed
-cameras = [(cam1, "Camera 1"), (cam2, "Camera 2")]
+for cam, window_name, properties in cameras:
+    cam.set(cv2.CAP_PROP_FPS, properties["fps"])
+    cam.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
+    cam.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
 
-# Run the combined cameras
+
+print(cv2.useOptimized())
 run_cameras(cameras)
