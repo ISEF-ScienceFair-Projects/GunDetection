@@ -17,7 +17,7 @@ download the weights and paste the `yolo-obj_last.weights` file into the main di
 then run 
 
 ```shell
-python3 main.py
+python3 gun.py
 ```
 
 for the gun AI
@@ -25,6 +25,6 @@ for the gun AI
 and run
 
 ```shell
-python3 clothesTest.py
+python3 clothes.py
 ```
 for the clothes detection

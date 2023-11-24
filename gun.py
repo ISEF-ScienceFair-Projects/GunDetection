@@ -53,17 +53,18 @@ class YoloObjD:
                 x, y, w, h = boxes[i]
                 label = str(self.classes[class_ids[i]])
                 color = self.colors[class_ids[i]]
+                font_size = max(1, min(w, h) // 10) #mathsss
                 cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-                cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
+                cv2.putText(img, label, (x, y + 30), font, font_size, color, 2)
 
         return img, len(boxes)
 
-def run_cameras(cameras):
+def run_cameras(obj,cameras):
     while True:
         combined_frames = []
 
         for cam, window_name, properties in cameras:
-            ret, frame, boxes = run(cam, window_name)
+            ret, frame, boxes = run(obj,cam, window_name)
             if not ret:
                 continue
 
@@ -86,29 +87,34 @@ def run_cameras(cameras):
     for cam, _ in cameras:
         cam.release()
     cv2.destroyAllWindows()
-def run(cam, window_name):
+
+def main():
+    weight_path = 'yolo-obj_last.weights'
+    config_path = 'gun.cfg'
+    yolo_detector = YoloObjD(weight_path, config_path)
+
+    # init
+    cam1 = cv2.VideoCapture(0)
+    cam2 = cv2.VideoCapture(1)
+    cameras = [(cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
+            (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})]
+
+    for cam, window_name, properties in cameras:
+        cam.set(cv2.CAP_PROP_FPS, properties["fps"])
+        cam.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
+        cam.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
+
+
+    print(cv2.useOptimized())
+    run_cameras(yolo_detector,cameras)
+    
+def run(yolo_detector,cam, window_name):
     ret, frame_info = cam.read()
     if not ret:
         return False, None, 0
 
     frame, boxes = yolo_detector.process_frame(frame_info)
     return True, frame, boxes
+if __name__ == "__main__":
+    main()
 
-weight_path = 'yolo-obj_last.weights'
-config_path = 'gun.cfg'
-yolo_detector = YoloObjD(weight_path, config_path)
-
-# init
-cam1 = cv2.VideoCapture(0)
-cam2 = cv2.VideoCapture(1)
-cameras = [(cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
-           (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})]
-
-for cam, window_name, properties in cameras:
-    cam.set(cv2.CAP_PROP_FPS, properties["fps"])
-    cam.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
-    cam.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
-
-
-print(cv2.useOptimized())
-run_cameras(cameras)
