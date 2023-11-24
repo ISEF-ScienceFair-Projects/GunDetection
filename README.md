@@ -15,9 +15,11 @@ Download Gun model weights and Darknet clothes detection weights
 download the weights and paste the `yolo-obj_last.weights` file into the main directory, and paste `built_model` folder into the clothes directory.
 <br>
 then run 
+
 ```shell
-python3 test.py
+python3 main.py
 ```
+
 for the gun AI
 <br>
 and run
