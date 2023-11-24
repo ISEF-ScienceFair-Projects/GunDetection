@@ -6,7 +6,7 @@ class YoloObjD:
         self.net = cv2.dnn.readNet(weight_path, config_path)
         self.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
-        self.classes = ["Gun"]
+        self.classes = ["gun"]
         self.layer_names = self.net.getLayerNames()
         self.output_layers = self.net.getUnconnectedOutLayers()
 
@@ -16,6 +16,7 @@ class YoloObjD:
             self.output_layers = [self.layer_names[i[0] - 1] for i in self.output_layers]
 
         self.colors = [0, 0, 0]
+        self.fontcolors = [240, 255, 240]
 
     def process_frame(self, frame):
         img = cv2.resize(frame, None, fx=0.4, fy=0.4)
@@ -51,70 +52,26 @@ class YoloObjD:
         for i in range(len(boxes)):
             if i in indexes:
                 x, y, w, h = boxes[i]
-                label = str(self.classes[class_ids[i]])
+                label = f"{self.classes[0]} {round(confidences[i]*100)}%"
                 color = self.colors[class_ids[i]]
-                font_size = max(1, min(w, h) // 10) #mathsss
+                fontcolor = self.calculate_contrast_font_color(img, x, y, w, h)
+                font_size = max(1, min(w, h) // 50)  # mathsss
                 cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-                cv2.putText(img, label, (x, y + 30), font, font_size, color, 2)
+                cv2.putText(img, label, (x, y + 30), font, font_size, fontcolor, 2)
 
         return img, len(boxes)
 
-def run_cameras(obj,cameras):
-    while True:
-        combined_frames = []
+    def calculate_contrast_font_color(self, img, x, y, w, h):
+        roi = img[y:y+h, x:x+w]
+        mean_lab = np.mean(cv2.cvtColor(roi, cv2.COLOR_BGR2LAB), axis=(0, 1))
+        lightness = mean_lab[0]
+        contrast_color = [0, 0, 0] if lightness < 50 else [255, 255, 255]
+        return contrast_color
 
-        for cam, window_name, properties in cameras:
-            ret, frame, boxes = run(obj,cam, window_name)
-            if not ret:
-                continue
-
-            combined_frames.append((frame, boxes))
-
-        if not combined_frames:
-            break
-
-        combined_frames_resized = [(cv2.resize(frame, None, fx=2, fy=2), boxes) for frame, boxes in combined_frames]
-        combined_frame = np.hstack([frame for frame, _ in combined_frames_resized])
-        cv2.imshow("Combined Cameras", combined_frame)
-
-        for _, boxes in combined_frames_resized:
-            if boxes > 0:
-                cv2.imwrite(f'gunImages/combined_frames.jpg', combined_frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    for cam, _ in cameras:
-        cam.release()
-    cv2.destroyAllWindows()
-
-def main():
-    weight_path = 'yolo-obj_last.weights'
-    config_path = 'gun.cfg'
-    yolo_detector = YoloObjD(weight_path, config_path)
-
-    # init
-    cam1 = cv2.VideoCapture(0)
-    cam2 = cv2.VideoCapture(1)
-    cameras = [(cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
-            (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})]
-
-    for cam, window_name, properties in cameras:
-        cam.set(cv2.CAP_PROP_FPS, properties["fps"])
-        cam.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
-        cam.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
-
-
-    print(cv2.useOptimized())
-    run_cameras(yolo_detector,cameras)
-    
-def run(yolo_detector,cam, window_name):
+def run(yolo_detector, cam, window_name):
     ret, frame_info = cam.read()
     if not ret:
         return False, None, 0
 
     frame, boxes = yolo_detector.process_frame(frame_info)
     return True, frame, boxes
-if __name__ == "__main__":
-    main()
-

@@ -1,9 +1,8 @@
 import cv2
 import numpy as np
-from cloth.cloth_detection import *
-from gun import YoloObjD, run_cameras, run
-import time
-
+from cloth.cloth_detection import Draw_Bounding_Box,Detect_Clothes,Load_DeepFashion2_Yolov3
+from gun import YoloObjD, run
+import tensorflow as tf
 def main():
     weight_path_gun = 'yolo-obj_last.weights'
     config_path_gun = 'gun.cfg'
@@ -12,22 +11,22 @@ def main():
     # init
     cam1 = cv2.VideoCapture(0)
     cam2 = cv2.VideoCapture(1)
-    cameras = [(cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
-               (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})]
+    cameras = [
+        (cam1, "cam 1", {"fps": 20, "width": 640, "height": 416}),
+        (cam2, "cam 2", {"fps": 20, "width": 640, "height": 416})
+    ]
 
     for cap, window_name, properties in cameras:
         cap.set(cv2.CAP_PROP_FPS, properties["fps"])
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, properties["width"])
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, properties["height"])
 
-    #print(cv2.useOptimized())
-
     run_gun_detection(yolo_detector, cameras)
 
 def run_gun_detection(yolo_detector, cameras):
     consecutive_gun_detected_count = 0
     buffer_iteration_count = 4
-    count = True
+
     while True:
         combined_frames = []
 
@@ -51,7 +50,7 @@ def run_gun_detection(yolo_detector, cameras):
         if gun_detected_this_iteration:
             consecutive_gun_detected_count += 1
             if consecutive_gun_detected_count >= buffer_iteration_count:
-                print("gunman detected for", buffer_iteration_count, "ticks. clothes detection gonna fire!!")
+                print("Gunman detected for", buffer_iteration_count, "ticks. Clothes detection gonna fire!!")
                 cv2.imwrite("gunImages/gunMan.jpg", combined_frame)
                 run_clothes_detection(cameras)
                 return
