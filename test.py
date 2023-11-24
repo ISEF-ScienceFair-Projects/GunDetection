@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-class YOLOObjectDetection:
+class YoloObjD:
     def __init__(self, weight_path, config_path):
         self.net = cv2.dnn.readNet(weight_path, config_path)
 
@@ -19,7 +19,7 @@ class YOLOObjectDetection:
         else:
             self.output_layers = [self.layer_names[i[0] - 1] for i in self.output_layers]
 
-        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
+        self.colors = [0,0,0]
 
     def process_frame(self, frame):
         img = cv2.resize(frame, None, fx=0.4, fy=0.4)
@@ -68,7 +68,7 @@ def run_cameras(cameras):
         combined_frames = []
 
         for cam, window_name in cameras:
-            ret, frame, boxes = run_camera(cam, window_name)
+            ret, frame, boxes = run(cam, window_name)
             if not ret:
                 continue
 
@@ -93,7 +93,7 @@ def run_cameras(cameras):
     cv2.destroyAllWindows()
 
 
-def run_camera(cam, window_name):
+def run(cam, window_name):
     ret, frame_info = cam.read()
     if not ret:
         return False, None, 0
@@ -103,7 +103,7 @@ def run_camera(cam, window_name):
 
 weight_path = 'yolo-obj_last.weights'
 config_path = 'gun.cfg'
-yolo_detector = YOLOObjectDetection(weight_path, config_path)
+yolo_detector = YoloObjD(weight_path, config_path)
 
 # Camera setup
 cam1 = cv2.VideoCapture(0)
