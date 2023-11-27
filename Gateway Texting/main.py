@@ -79,7 +79,7 @@ def main():
     message = "hello !:"
     provider = "Verizon"
 
-    sender_credentials = ("aleela.gem@gmail.com", str(open("password.txt", "r").read()))
+    sender_credentials = ("XXX", str(open("password.txt", "r").read()))
 
     # SMS
     #send_sms_via_email(number, message, provider, sender_credentials)
