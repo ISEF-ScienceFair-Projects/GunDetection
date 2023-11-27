@@ -75,7 +75,7 @@ def send_mms_via_email(
 
 def main():
     #number = "7146132874"
-    number = '4693330263'
+    number = 'XXX'
     message = "hello !:"
     provider = "Verizon"
 
