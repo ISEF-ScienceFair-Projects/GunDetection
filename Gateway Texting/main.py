@@ -76,7 +76,7 @@ def send_mms_via_email(
 def main():
     #number = "7146132874"
     number = 'XXX'
-    message = "hello !:"
+    message = "wsp shourya!!"
     provider = "Verizon"
 
     sender_credentials = ("XXX", str(open("password.txt", "r").read()))
@@ -85,7 +85,7 @@ def main():
     #send_sms_via_email(number, message, provider, sender_credentials)
     #'''
     # MMS
-    file_path = "gunImages\gunMan.jpg"
+    file_path = "gunImages/gunMan.jpg"
 
     mime_maintype = "image"
     mime_subtype = "jpeg"
