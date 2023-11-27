@@ -74,20 +74,24 @@ def run_clothes_detection(cameras):
     start_time = time.time()
     
     while True:
-        
         for i, cap in enumerate(cap_list):
             ret, frame = cap.read()
             if not ret:
-                print(f"falure on cam{i}")
+                print(f"failure on cam{i}")
                 break
-            
 
             img_tensor = tf.convert_to_tensor(frame[tf.newaxis, ...], dtype=tf.float32) / 255.0
-            img_with_boxes = Draw_Bounding_Box(frame, Detect_Clothes(img_tensor, models[i]))
+            img_with_boxes, box_array = Draw_Bounding_Box(frame, Detect_Clothes(img_tensor, models[i]))
+
+            if box_array:
+                avg_rgb_values = get_avg_rgb(box_array, frame)
+                color_category = get_color_category(avg_rgb_values)
+                print(f"Color category for cam {i + 1}: {color_category}")
+
             elapsed_time = time.time() - start_time
             fps = len(cameras) / elapsed_time
             cv2.putText(img_with_boxes, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.imshow(f"Clothes detection cam {i+1}", img_with_boxes)
+            cv2.imshow(f"Clothes detection cam {i + 1}", img_with_boxes)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -95,6 +99,37 @@ def run_clothes_detection(cameras):
     for cap in cap_list:
         cap.release()
     cv2.destroyAllWindows()
+
+def get_avg_rgb(box_array, frame):
+    avg_rgb_values = []
+
+    for box in box_array:
+        x1, y1, x2, y2 = box
+        region = frame[y1:y2, x1:x2]
+        avg_rgb = np.mean(region, axis=(0, 1))
+        avg_rgb_values.append(avg_rgb)
+
+    return avg_rgb_values
+
+def get_color_category(avg_rgb_values):
+    color_thresholds = {
+        'Red': (150, 30, 30),
+        'White': (220, 220, 220),
+        'Black': (30, 30, 30),
+        'Blue': (30, 30, 150),
+        'Green': (30, 150, 30)
+    }
+
+    min_distance = float('inf')
+    color_category = None
+
+    for category, threshold in color_thresholds.items():
+        distance = np.linalg.norm(np.array(avg_rgb_values) - np.array(threshold))
+        if distance < min_distance:
+            min_distance = distance
+            color_category = category
+
+    return color_category
 
 if __name__ == "__main__":
     main()

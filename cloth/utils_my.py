@@ -29,12 +29,13 @@ def Draw_Bounding_Box(img, list_obj):
     color_red = [241/255, 66/255, 66/255]
 
     # draw rectangle bounding box for cars
+    arr = []
     for obj in list_obj:
         x1 = int(round(obj['x1']*img_width))
         y1 = int(round(obj['y1']*img_height))
         x2 = int(round(obj['x2']*img_width))
         y2 = int(round(obj['y2']*img_height))
-
+        arr.append([x1,y1,x2,y2])
         if obj['label'] == 'short_sleeve_top':
             color = color_yellow
         elif obj['label'] == 'trousers':
@@ -48,7 +49,7 @@ def Draw_Bounding_Box(img, list_obj):
         img = cv2.rectangle(img, (x1, y1), (x2, y2), color, 4)
         img = cv2.putText(img, text, (x1, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2, cv2.LINE_AA)
 
-    return img
+    return img,arr
 
 def Read_Img_2_Tensor(img_path):
     img_raw = tf.io.read_file(img_path)
