@@ -10,6 +10,10 @@ In 2021, 48,830 people died from gun-related injuries in the U.S., according to 
 
 Download Gun model weights and Darknet clothes detection weights
 
+## Password for Texting
+`https://drive.google.com/drive/folders/10lVkmILzi5nVou20RG_yyEVbyhk1iEXK`
+download this file and put it in the same directory as main.py in the gateway texting folder
+
 ## Usage
 
 download the weights and paste the `yolo-obj_last.weights` file into the main directory, and paste `built_model` folder into the clothes directory.
