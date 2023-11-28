@@ -32,3 +32,9 @@ and run
 python3 clothes.py
 ```
 for the clothes detection
+
+## Credits
+https://github.com/Rabbit1010/Clothes-Recognition-and-Retrieval -
+For the cloth detecion code
+<br>
+The rest is our own.
