@@ -43,7 +43,11 @@ def send_mms_via_email(
 ):
 
     sender_email, email_password = sender_credentials
-    receiver_email = f'{number}@{PROVIDERS.get(provider).get("mms")}'
+    
+    if PROVIDERS.get(provider).get("mms") == None:
+        receiver_email = f'{number}@{PROVIDERS.get(provider).get("sms")}'
+    else:
+        receiver_email = f'{number}@{PROVIDERS.get(provider).get("mms")}'
 
     email_message=MIMEMultipart()
     email_message["Subject"] = subject
@@ -72,35 +76,28 @@ def send_mms_via_email(
         email.login(sender_email, email_password)
         email.sendmail(sender_email, receiver_email, text)
 
+def text(
+        ty = 'sms',
+        number = XXXXXXXXXX,
+        message = 'no message was added',
+        file_path = '',
+        mime_maintype = 'image',
+        mime_subtype = 'jpeg',
+        provider = 'Verizon',
+        sender_credentials = ("XXXXXXXXXX@gmail.com", str(open("password.txt", "r").read())),
+        ):
+    #hello
+    if ty == 'sms':
+        send_sms_via_email(number, message, provider, sender_credentials)
+        print(f'"{message}" was sent to {number}')
+    if ty == 'mms':
+        send_mms_via_email(number, message, file_path, mime_maintype, mime_subtype, provider, sender_credentials)
+        print(f'"{message}" was sent to {number} with attachment at "{file_path}"')
+
+
 
 def main():
-    #number = "7146132874"
-    number = 'XXX'
-    message = "wsp shourya!!"
-    provider = "Verizon"
-
-    sender_credentials = ("XXX", str(open("password.txt", "r").read()))
-
-    # SMS
-    #send_sms_via_email(number, message, provider, sender_credentials)
-    #'''
-    # MMS
-    file_path = "gunImages/gunMan.jpg"
-
-    mime_maintype = "image"
-    mime_subtype = "jpeg"
-
-    send_mms_via_email(
-        number,
-        message,
-        file_path,
-        mime_maintype,
-        mime_subtype,
-        provider,
-        sender_credentials,
-    )
-    #'''
-
+    text('mms',message=' mom', file_path='gunImages\gunMan.jpg')
 
 if __name__ == "__main__":
     main()
