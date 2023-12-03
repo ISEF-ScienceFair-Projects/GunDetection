@@ -4,6 +4,7 @@ import time
 from cloth.cloth_detection import Draw_Bounding_Box, Detect_Clothes, Load_DeepFashion2_Yolov3
 from gun import YoloObjD, run
 import tensorflow as tf
+import GatewayTexting.callMeMaybe as cm
 
 def main():
     weight_path_gun = 'yolo-obj_last.weights'
@@ -56,6 +57,7 @@ def run_gun_detection(yolo_detector, cameras):
             if consecutive_gun_detected_count >= buffer_iteration_count:
                 print("Gunman detected for", buffer_iteration_count, "ticks. Clothes detection gonna fire!!")
                 cv2.imwrite("gunImages/gunMan.jpg", combined_frame)
+                cm.text('mms',message='monkey spoted. engage in evasive manuvars. go go gadget go!', file_path='gunImages/gunMan.jpg',number=2142184754, provider="T-Mobile")
                 run_clothes_detection(cameras)
                 return
         else:

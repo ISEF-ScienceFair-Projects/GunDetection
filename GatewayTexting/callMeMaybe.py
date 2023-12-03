@@ -1,5 +1,5 @@
 import email, smtplib, ssl
-from providers import PROVIDERS
+from GatewayTexting.providers import PROVIDERS
 
 # used for MMS
 from email import encoders
@@ -78,13 +78,13 @@ def send_mms_via_email(
 
 def text(
         ty = 'sms',
-        number = XXXXXXXXXX,
+        number = 4693330263,
         message = 'no message was added',
         file_path = '',
         mime_maintype = 'image',
         mime_subtype = 'jpeg',
         provider = 'Verizon',
-        sender_credentials = ("XXXXXXXXXX@gmail.com", str(open("password.txt", "r").read())),
+        sender_credentials = ("aleela.gem@gmail.com", str(open("password.txt", "r").read())),
         ):
     #hello
     if ty == 'sms':
