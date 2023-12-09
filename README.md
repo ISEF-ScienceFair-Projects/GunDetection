@@ -12,7 +12,8 @@ Download Gun model weights and Darknet clothes detection weights
 
 ## Password for Texting
 `https://drive.google.com/drive/folders/10lVkmILzi5nVou20RG_yyEVbyhk1iEXK`
-download this file and put it in the same directory as main.py in the gateway texting folder
+
+Download this file and put it in the same directory as main.py in the gateway texting folder
 
 ## Usage
 
