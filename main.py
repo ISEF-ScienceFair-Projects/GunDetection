@@ -140,6 +140,8 @@ class ClothesDetection:
         self.start_time = time.time()
 
     def run_detection(self, cameras: list):
+        gunman_is_wearing = ""
+        
         while True:
             frames = [cap.read()[1] for cap in self.cap_list]
             ret_list = [frame is not None for frame in frames]
@@ -149,13 +151,18 @@ class ClothesDetection:
             img_tensors = [tf.convert_to_tensor(frame[tf.newaxis, ...], dtype=tf.float32) / 255.0 for frame in frames]
             img_with_boxes_list = []
             box_array_list = []
-
+            text = ""
+            
             for i, (img_tensor, model) in enumerate(zip(img_tensors, self.models)):
-                img_with_boxes, box_array = Draw_Bounding_Box(frames[i], Detect_Clothes(img_tensor, model))
+                img_with_boxes, box_array, text = Draw_Bounding_Box(frames[i], Detect_Clothes(img_tensor, model))
+
                 img_with_boxes_list.append(img_with_boxes)
                 box_array_list.append(box_array)
 
-                if box_array:
+                if box_array and not gunman_is_wearing:
+                    gunman_is_wearing = text
+                    cm.text('sms',
+                            message=f'Gunman is wearing {gunman_is_wearing}', number=2142184754, provider="T-Mobile")
                     avg_rgb_values = self.get_avg_rgb(box_array, frames[i])
                     color_category = self.get_color_category(avg_rgb_values)
                     print(f"Color category for cam {i + 1}: {color_category}")
@@ -165,6 +172,7 @@ class ClothesDetection:
 
             for i, img_with_boxes in enumerate(img_with_boxes_list):
                 cv2.putText(img_with_boxes, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                cv2.putText(img_with_boxes, f"Gunman is wearing {gunman_is_wearing}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.imshow(f"Clothes detection cam {i + 1}", img_with_boxes)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -173,6 +181,8 @@ class ClothesDetection:
         for cap in self.cap_list:
             cap.release()
         cv2.destroyAllWindows()
+
+
 
     def get_avg_rgb(self, box_array: list, frame: np.ndarray) -> list:
         avg_rgb_values = []
