@@ -69,20 +69,22 @@ class YoloObjD:
         contrast_color = [0, 0, 0]
         return contrast_color
 
-def run(yolo_detector: YoloObjD, cam: cv2.VideoCapture, window_name: str) -> tuple:
-    ret, frame_info = cam.read()
-    if not ret:
-        return False, None, 0
+def run(yolo_detector: YoloObjD, cam: cv2.VideoCapture, window_name: str, single_frame_mode: bool = False, single_frame_path: str = None) -> tuple:
+    if single_frame_mode:
+        frame_info = cv2.imread(single_frame_path)
+    else:
+        ret, frame_info = cam.read()
+        if not ret:
+            return False, None, 0
 
     frame, boxes = yolo_detector.process_frame(frame_info)
     return True, frame, boxes
-
 
 class GunDetection:
     def __init__(self, weight_path: str, config_path: str):
         self.yolo_detector = YoloObjD(weight_path, config_path)
 
-    def run_detection(self, cameras: list) -> bool:
+    def run_detection(self, cameras: list, single_frame_mode: bool = False, single_frame_path: str = None) -> bool:
         consecutive_gun_detected_count = 0
         buffer_iteration_count = 4
         start_time = time.time()
@@ -92,7 +94,7 @@ class GunDetection:
             boxes_list = []
 
             for cam, window_name in cameras:
-                ret, frame, boxes = run(self.yolo_detector, cam, window_name)
+                ret, frame, boxes = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
                 if not ret:
                     continue
 
@@ -102,8 +104,7 @@ class GunDetection:
             if not combined_frames:
                 break
 
-            combined_frames_resized = [(cv2.resize(frame, None, fx=2, fy=2), boxes) for frame, boxes in
-                                       zip(combined_frames, boxes_list)]
+            combined_frames_resized = [(cv2.resize(frame, None, fx=2, fy=2), boxes) for frame, boxes in zip(combined_frames, boxes_list)]
             combined_frame = np.hstack([frame for frame, _ in combined_frames_resized])
 
             elapsed_time = time.time() - start_time
@@ -131,7 +132,6 @@ class GunDetection:
                 break
 
         return False
-
 
 class ClothesDetection:
     def __init__(self, num_cameras: int):
@@ -205,7 +205,6 @@ class ClothesDetection:
 
         return color_category
 
-
 def main():
     weight_path_gun = 'yolo-obj_last.weights'
     config_path_gun = 'gun.cfg'
@@ -221,7 +220,6 @@ def main():
     if gun_detection.run_detection(cameras):
         clothes_detection = ClothesDetection(len(cameras))
         clothes_detection.run_detection(cameras)
-
 
 if __name__ == "__main__":
     main()
