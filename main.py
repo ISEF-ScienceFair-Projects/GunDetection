@@ -92,9 +92,10 @@ class GunDetection:
         while True:
             combined_frames = []
             boxes_list = []
-
+            
             for cam, window_name in cameras:
                 ret, frame, boxes = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
+                cv2.putText(frame, f"Zone {window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 if not ret:
                     continue
 
@@ -161,9 +162,11 @@ class ClothesDetection:
 
                 if box_array and not gunman_is_wearing:
                     gunman_is_wearing = text
-                    cm.text('sms',
-                            message=f'Gunman is wearing {gunman_is_wearing}', number=2142184754, provider="T-Mobile")
+                    #cm.text('sms',
+                    #        message=f'Gunman is wearing {gunman_is_wearing}', 
+                    #        number=2142184754, provider="T-Mobile")
                     avg_rgb_values = self.get_avg_rgb(box_array, frames[i])
+                    print(avg_rgb_values)
                     color_category = self.get_color_category(avg_rgb_values)
                     print(f"Color category for cam {i + 1}: {color_category}")
 
@@ -173,6 +176,7 @@ class ClothesDetection:
             for i, img_with_boxes in enumerate(img_with_boxes_list):
                 cv2.putText(img_with_boxes, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.putText(img_with_boxes, f"Gunman is wearing {gunman_is_wearing}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                #cv2.putText(img_with_boxes, f"Color rgb {avg_rgb_values}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.imshow(f"Clothes detection cam {i + 1}", img_with_boxes)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -222,9 +226,11 @@ def main():
 
     cam1 = cv2.VideoCapture(0)
     cam2 = cv2.VideoCapture(1)
+    cam3 = cv2.VideoCapture(2)
     cameras = [
         (cam1, "cam 1"),
-        (cam2, "cam 2")
+        (cam2, "cam 2"),
+        (cam3, "cam 3")
     ]
 
     if gun_detection.run_detection(cameras):
