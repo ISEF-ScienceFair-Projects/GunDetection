@@ -14,8 +14,8 @@ def main():
         (cam2, "cam 2"),
         (cam3, "cam 3")
     ]
-
-    if gun_detection.run_detection(cameras):
+    statement,zone = gun_detection.run_detection(cameras)
+    if statement:
         clothes_detection = ClothesDetection(len(cameras))
         clothes_detection.run_detection(cameras)
 
