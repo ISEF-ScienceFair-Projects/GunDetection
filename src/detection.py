@@ -10,7 +10,7 @@ import tensorflow as tf
 class GunDetection:
     def __init__(self, weight_path: str, config_path: str):
         self.yolo_detector = YoloObjD(weight_path, config_path)
-
+    
     def run_detection(self, cameras: list, single_frame_mode: bool = False, single_frame_path: str = None) -> bool:
         consecutive_gun_detected_count = 0
         buffer_iteration_count = 4
@@ -19,19 +19,22 @@ class GunDetection:
         while True:
             combined_frames = []
             boxes_list = []
+            cordlist = []
             
             for cam, window_name in cameras:
-                ret, frame, boxes = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
+                ret, frame, boxes, cords = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
+                cordlist.append(cords)
                 cv2.putText(frame, f"Zone {window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 if not ret:
                     continue
 
                 combined_frames.append(frame)
                 boxes_list.append(boxes)
-
+                
+            
             if not combined_frames:
                 break
-
+            
             combined_frames_resized = [(cv2.resize(frame, None, fx=2, fy=2), boxes) for frame, boxes in zip(combined_frames, boxes_list)]
             combined_frame = np.hstack([frame for frame, _ in combined_frames_resized])
 
@@ -48,6 +51,17 @@ class GunDetection:
                 consecutive_gun_detected_count += 1
                 if consecutive_gun_detected_count >= buffer_iteration_count:
                     print("Gunman detected for", buffer_iteration_count, "ticks. Clothes detection gonna fire!!")
+                    if cordlist[0][0] > 0:
+                        zone = 1
+                        print(f"Zone {zone}")
+                    if cordlist[1][0] > 0:
+                        zone = 2
+                        print(f"Zone {zone}")
+                    if cordlist[2][0] > 0:
+                        zone = 3
+                        print(f"Zone {zone}")
+                    #print(cordlist)
+                    
                     cv2.imwrite("gunImages/gunMan.jpg", combined_frame)
                     #cm.text('mms',
                     #        message='monkey spoted. engage in evasive manuvars. go go gadget go!',
@@ -60,7 +74,6 @@ class GunDetection:
                 break
 
         return False
-
 
 class ClothesDetection:
     def __init__(self, num_cameras: int):

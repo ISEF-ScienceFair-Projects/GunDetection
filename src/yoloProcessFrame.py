@@ -28,7 +28,7 @@ class YoloObjD:
         class_ids = []
         confidences = []
         boxes = []
-
+        x = y = w= h = 0
         for out in outs:
             for detection in out:
                 scores = detection[5:]
@@ -46,6 +46,7 @@ class YoloObjD:
                     boxes.append([x, y, w, h])
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
+        
 
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
         font = cv2.FONT_HERSHEY_PLAIN
@@ -59,7 +60,7 @@ class YoloObjD:
                 cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
                 cv2.putText(img, label, (x, y + 30), font, font_size, fontcolor, 2)
 
-        return img, len(boxes)
+        return img, len(boxes),(x,y,w,h)
 
     def calculate_contrast_font_color(self, img: np.ndarray, x: int, y: int, w: int, h: int) -> list:
         contrast_color = [0, 0, 0]
@@ -73,5 +74,5 @@ def run(yolo_detector: YoloObjD, cam: cv2.VideoCapture, window_name: str, single
         if not ret:
             return False, None, 0
 
-    frame, boxes = yolo_detector.process_frame(frame_info)
-    return True, frame, boxes
+    frame, boxes,cords = yolo_detector.process_frame(frame_info)
+    return True, frame, boxes,cords
