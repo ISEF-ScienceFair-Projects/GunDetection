@@ -1,6 +1,6 @@
 import cv2
 from src.detection import GunDetection, ClothesDetection
-from src.arduinoBoard import sendP
+#from src.arduinoBoard import sendP
 
 def main():
     weight_path_gun = 'yolo-obj_last.weights'
@@ -13,7 +13,7 @@ def main():
     ]
     statement,zone = gun_detection.run_detection(cameras)
     if statement:
-        sendP(zone)
+        #sendP(zone)
         clothes_detection = ClothesDetection(len(cameras))
         clothes_detection.run_detection(cameras)
 
