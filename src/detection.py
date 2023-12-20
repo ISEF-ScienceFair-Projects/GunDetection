@@ -66,14 +66,14 @@ class GunDetection:
                     #cm.text('mms',
                     #        message='monkey spoted. engage in evasive manuvars. go go gadget go!',
                     #        file_path='gunImages/gunMan.jpg', number=2142184754, provider="T-Mobile")
-                    return True,zone
+                    return True
             else:
                 consecutive_gun_detected_count = 0
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        return False,zone
+        return False
 
 class ClothesDetection:
     def __init__(self, num_cameras: int):

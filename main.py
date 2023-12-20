@@ -1,19 +1,19 @@
 import cv2
 from src.detection import GunDetection, ClothesDetection
-#from src.arduinoBoard import sendP
 
 def main():
     weight_path_gun = 'model/darknetGun.weights'
     config_path_gun = 'gun.cfg'
     gun_detection = GunDetection(weight_path_gun, config_path_gun)
 
-    cam1 = cv2.VideoCapture(0)
+    cam1 = cv2.VideoCapture(1)
+    """cam2 = cv2.VideoCapture(1)
+    cam3 = cv2.VideoCapture(2)"""
     cameras = [
-        (cam1, "cam 1"),
+        (cam1, "cam 1")
     ]
-    statement,zone = gun_detection.run_detection(cameras)
-    if statement:
-        #sendP(zone)
+
+    if gun_detection.run_detection(cameras):
         clothes_detection = ClothesDetection(len(cameras))
         clothes_detection.run_detection(cameras)
 

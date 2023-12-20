@@ -72,7 +72,8 @@ def run(yolo_detector: YoloObjD, cam: cv2.VideoCapture, window_name: str, single
     else:
         ret, frame_info = cam.read()
         if not ret:
-            return False, None, 0
+            return False, None, 0,-1
 
     frame, boxes,cords = yolo_detector.process_frame(frame_info)
+    print(boxes)
     return True, frame, boxes,cords
