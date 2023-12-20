@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import time
-from src.yoloProcessFrame import YoloObjD, run
+from src.yolov3.yoloProcessFrame import YoloObjD, run
 import numpy as np
 import time
 from cloth.cloth_detection import Draw_Bounding_Box, Detect_Clothes, Load_DeepFashion2_Yolov3

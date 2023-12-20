@@ -1,5 +1,5 @@
 import cv2
-from src.detection import GunDetection, ClothesDetection
+from src.yolov3.detection import GunDetection, ClothesDetection
 
 def main():
     weight_path_gun = 'model/darknetGun.weights'
