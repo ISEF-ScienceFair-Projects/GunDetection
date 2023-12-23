@@ -26,7 +26,9 @@ class GunDetection:
                 cordlist.append(cords)
                 #print(f'cam: {window_name}\ncords: {cords}')
                 if cords != (0,0,0,0):
-                    print(f'Gun man is in {window_name}')
+                    #print(f'Gun man is in {window_name}')
+                    yield int(window_name[5])
+
                 cv2.putText(frame, f"{window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 
                 if not ret:
