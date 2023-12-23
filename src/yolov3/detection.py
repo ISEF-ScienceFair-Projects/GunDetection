@@ -24,14 +24,23 @@ class GunDetection:
             for cam, window_name in cameras:
                 ret, frame, boxes, cords = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
                 cordlist.append(cords)
-                cv2.putText(frame, f"Zone {window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                #print(f'cam: {window_name}\ncords: {cords}')
+                if cords != (0,0,0,0):
+                    print(f'Gun man is in {window_name}')
+                cv2.putText(frame, f"{window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                
                 if not ret:
                     continue
 
                 combined_frames.append(frame)
                 boxes_list.append(boxes)
-                
-            
+            '''    
+            cv2.putText(frame, f"g", (int(cordlist[0][0]),int(cordlist[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(frame, f"a", (0,0), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(frame, f"(100,0)", (100,0), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(frame, f"(0,100)", (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            print(cordlist)
+            '''
             if not combined_frames:
                 break
             
@@ -51,17 +60,11 @@ class GunDetection:
                 consecutive_gun_detected_count += 1
                 if consecutive_gun_detected_count >= buffer_iteration_count:
                     print("Gunman detected for", buffer_iteration_count, "ticks. Clothes detection gonna fire!!")
-                    if cordlist[0][0] > 0:
-                        zone = 1
-                        print(f"Zone {zone}")
-                    if cordlist[1][0] > 0:
-                        zone = 2
-                        print(f"Zone {zone}")
-                    if cordlist[2][0] > 0:
-                        zone = 3
-                        print(f"Zone {zone}")
-                    #print(cordlist)
-                    
+                    for i in range(len(cordlist)):
+                        if cordlist[i][0] > 0:
+                            zone = i+1
+                            print(f"Zone {zone}")
+
                     cv2.imwrite("gunImages/gunMan.jpg", combined_frame)
                     #cm.text('mms',
                     #        message='monkey spoted. engage in evasive manuvars. go go gadget go!',
