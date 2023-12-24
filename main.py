@@ -1,6 +1,6 @@
 import cv2
 from src.yolov3.detection import GunDetection, ClothesDetection
-
+from src.yolov3.arduinoBoard import sendP
 def main():
     weight_path_gun = 'model\darknetGun.weights'
     config_path_gun = 'gun.cfg'
@@ -15,6 +15,7 @@ def main():
 
     for i in gun_detection.run_detection(cameras):
         print(f'Zone {i}')
+        #sendP(i)
         if type(i) != int:
             break
 
