@@ -1,7 +1,8 @@
 import serial
-ser = serial.Serial('COM7', 9600, timeout=0.5)
-possible_val = [0,1,2,3]
+
 def sendP(message):
+    ser = serial.Serial('COM7', 9600, timeout=0.5)
+    possible_val = [0,1,2,3]
     if int(message) in possible_val:
         val = bytes(message,"utf-8")
         while True:
