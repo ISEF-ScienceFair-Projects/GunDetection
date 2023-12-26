@@ -42,18 +42,18 @@ def Detect_Clothes(img, model_yolov3, eager_execution=True):
 
     return list_obj
 
-def Detect_Clothes_and_Crop(img_tensor, model, threshold=0.5):
+def Detect_Clothes_and_Crop(img_tensor, model, threshold=0.2):
     list_obj = Detect_Clothes(img_tensor, model)
 
     img = np.squeeze(img_tensor.numpy())
     img_width = img.shape[1]
     img_height = img.shape[0]
-
+    print(list_obj)
     # crop out one cloth
     for obj in list_obj:
-        if obj['label'] == 'short_sleeve_top' and obj['confidence']>threshold:
+        if obj['confidence']>threshold:
             img_crop = img[int(obj['y1']*img_height):int(obj['y2']*img_height), int(obj['x1']*img_width):int(obj['x2']*img_width), :]
-
+        #a = 2
     return img_crop
 
 if __name__ == '__main__':

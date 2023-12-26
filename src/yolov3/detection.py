@@ -94,7 +94,7 @@ class ClothesDetection:
 
     def run_detection(self, cameras: list):
         gunman_is_wearing = ""
-        
+        avg_rgb_values = []
         while True:
             frames = [cap.read()[1] for cap in self.cap_list]
             ret_list = [frame is not None for frame in frames]
@@ -104,6 +104,7 @@ class ClothesDetection:
             img_tensors = [tf.convert_to_tensor(frame[tf.newaxis, ...], dtype=tf.float32) / 255.0 for frame in frames]
             img_with_boxes_list = []
             box_array_list = []
+            
             text = ""
             
             for i, (img_tensor, model) in enumerate(zip(img_tensors, self.models)):
@@ -128,7 +129,7 @@ class ClothesDetection:
             for i, img_with_boxes in enumerate(img_with_boxes_list):
                 cv2.putText(img_with_boxes, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.putText(img_with_boxes, f"Gunman is wearing {gunman_is_wearing}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                #cv2.putText(img_with_boxes, f"Color rgb {avg_rgb_values}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                cv2.putText(img_with_boxes, f"Color rgb {avg_rgb_values}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.imshow(f"Clothes detection cam {i + 1}", img_with_boxes)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -137,17 +138,18 @@ class ClothesDetection:
         for cap in self.cap_list:
             cap.release()
         cv2.destroyAllWindows()
-        
+
     def get_avg_rgb(self, box_array: list, frame: np.ndarray) -> list:
         avg_rgb_values = []
 
         for box in box_array:
             x1, y1, x2, y2 = box
-            region = frame[y1:y2, x1:x2]
-            avg_rgb = np.mean(region, axis=(0, 1))
-            avg_rgb_values.append(avg_rgb)
+            box_region = frame[y1:y2, x1:x2]  # Extract the region of interest from the frame
+            avg_rgb = np.mean(box_region, axis=(0, 1))  # Calculate the average RGB values
+            avg_rgb_values.append(avg_rgb.tolist())
 
         return avg_rgb_values
+
 
     def get_color_category(self, avg_rgb_values: list) -> str:
         color_thresholds = {
