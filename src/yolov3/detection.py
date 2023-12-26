@@ -144,8 +144,8 @@ class ClothesDetection:
 
         for box in box_array:
             x1, y1, x2, y2 = box
-            box_region = frame[y1:y2, x1:x2]  # Extract the region of interest from the frame
-            avg_rgb = np.mean(box_region, axis=(0, 1))  # Calculate the average RGB values
+            box_region = frame[y1:y2, x1:x2]
+            avg_rgb = np.mean(box_region, axis=(0, 1))
             avg_rgb_values.append(avg_rgb.tolist())
 
         return avg_rgb_values
