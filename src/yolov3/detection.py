@@ -149,7 +149,8 @@ class ClothesDetection:
             avg_rgb_values.append(avg_rgb.tolist())
 
         return avg_rgb_values
-
+    def colour_from_RGB(avg_rgb_values):
+        pass
 
     def get_color_category(self, avg_rgb_values: list) -> str:
         color_thresholds = {
