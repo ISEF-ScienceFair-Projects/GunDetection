@@ -170,5 +170,5 @@ class ClothesDetection:
                 min_distance = distance
                 color_category = category
 
-        return color_category
+        return color_category 
     
