@@ -8,7 +8,7 @@ def main(tryall=True):
     gun_detection = GunDetection(weight_path_gun, config_path_gun)
 
     if not tryall:
-        cam1 = cv2.VideoCapture(0)
+        cam1 = cv2.VideoCapture(1)
         #cam2 = cv2.VideoCapture(1)
         cameras = [
             (cam1, "Zone 1")#, (cam2, 'Zone 2')
@@ -34,6 +34,7 @@ def main(tryall=True):
         else:
             # if this is running we have had a gun man for more that 4 ticks 
             print('you goofy goober')
+            frame = cv2.imread("gunImages/gunMan.jpg")
             clothes_detection = ClothesDetection(len(cameras))
             wearing,colour = clothes_detection.run_detection(cameras)
             print(f"wearing {wearing} and RGB {colour}")

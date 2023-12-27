@@ -87,25 +87,38 @@ class GunDetection:
         yield False
 
 class ClothesDetection:
-    def __init__(self, num_cameras: int):
-        self.models = [Load_DeepFashion2_Yolov3() for _ in range(num_cameras)]
-        self.cap_list = [cv2.VideoCapture(i) for i in range(num_cameras)]
+    def __init__(self, num_cameras: int, isframe=False, frame=None):
+        self.isframe = isframe
+        if not self.isframe:
+            self.models = [Load_DeepFashion2_Yolov3() for _ in range(num_cameras)]
+            self.cap_list = [cv2.VideoCapture(i) for i in range(num_cameras)]
+        else:
+            self.models = [Load_DeepFashion2_Yolov3()]
+            self.frame = frame
         self.start_time = time.time()
 
     def run_detection(self, cameras: list):
         gunman_is_wearing = ""
         avg_rgb_values = []
         while len(gunman_is_wearing)==0:
-            frames = [cap.read()[1] for cap in self.cap_list]
-            ret_list = [frame is not None for frame in frames]
-            if not all(ret_list):
-                break
-
-            img_tensors = [tf.convert_to_tensor(frame[tf.newaxis, ...], dtype=tf.float32) / 255.0 for frame in frames]
-            img_with_boxes_list = []
-            box_array_list = []
+            if not self.isframe:
+                frames = [cap.read()[1] for cap in self.cap_list]
+                ret_list = [frame is not None for frame in frames]
+                if not all(ret_list):
+                    break
             
-            text = ""
+            if not self.isframe:
+                img_tensors = [tf.convert_to_tensor(frame[tf.newaxis, ...], dtype=tf.float32) / 255.0 for frame in frames]
+                img_with_boxes_list = []
+                box_array_list = []
+                
+                text = ""
+            else:
+                img_tensors = [tf.convert_to_tensor(self.frame[tf.newaxis, ...], dtype=tf.float32) / 255.0]
+                img_with_boxes_list = []
+                box_array_list = []
+                
+                text = ""
             
             for i, (img_tensor, model) in enumerate(zip(img_tensors, self.models)):
                 img_with_boxes, box_array, text = Draw_Bounding_Box(frames[i], Detect_Clothes(img_tensor, model))
@@ -120,6 +133,7 @@ class ClothesDetection:
                     #        number=2142184754, provider="T-Mobile")
                     avg_rgb_values = self.get_avg_rgb(box_array, frames[i])
                     print(avg_rgb_values)
+
                     #color_category = self.get_color_category(avg_rgb_values)
                     #print(f"Color category for cam {i + 1}: {color_category}")
 
@@ -127,17 +141,18 @@ class ClothesDetection:
             fps = len(cameras) / elapsed_time
 
             for i, img_with_boxes in enumerate(img_with_boxes_list):
-                cv2.putText(img_with_boxes, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                cv2.putText(img_with_boxes, f"Gunman is wearing {gunman_is_wearing}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                cv2.putText(img_with_boxes, f"Color rgb {avg_rgb_values}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                cv2.imshow(f"Clothes detection cam {i + 1}", img_with_boxes)
+                if not self.isframe:
+                    cv2.putText(img_with_boxes, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    cv2.putText(img_with_boxes, f"Gunman is wearing {gunman_is_wearing}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    cv2.putText(img_with_boxes, f"Color rgb {avg_rgb_values}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    cv2.imshow(f"Clothes detection cam {i + 1}", img_with_boxes)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-
-        for cap in self.cap_list:
-            cap.release()
-        cv2.destroyAllWindows()
+        if not self.isframe:
+            for cap in self.cap_list:
+                cap.release()
+            cv2.destroyAllWindows()
         return (gunman_is_wearing,avg_rgb_values)
     def get_avg_rgb(self, box_array: list, frame: np.ndarray) -> list:
         avg_rgb_values = []
