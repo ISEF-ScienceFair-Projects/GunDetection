@@ -95,7 +95,7 @@ class ClothesDetection:
     def run_detection(self, cameras: list):
         gunman_is_wearing = ""
         avg_rgb_values = []
-        while True:
+        while len(gunman_is_wearing)==0:
             frames = [cap.read()[1] for cap in self.cap_list]
             ret_list = [frame is not None for frame in frames]
             if not all(ret_list):
@@ -120,8 +120,8 @@ class ClothesDetection:
                     #        number=2142184754, provider="T-Mobile")
                     avg_rgb_values = self.get_avg_rgb(box_array, frames[i])
                     print(avg_rgb_values)
-                    color_category = self.get_color_category(avg_rgb_values)
-                    print(f"Color category for cam {i + 1}: {color_category}")
+                    #color_category = self.get_color_category(avg_rgb_values)
+                    #print(f"Color category for cam {i + 1}: {color_category}")
 
             elapsed_time = time.time() - self.start_time
             fps = len(cameras) / elapsed_time
@@ -138,7 +138,7 @@ class ClothesDetection:
         for cap in self.cap_list:
             cap.release()
         cv2.destroyAllWindows()
-
+        return True
     def get_avg_rgb(self, box_array: list, frame: np.ndarray) -> list:
         avg_rgb_values = []
 
