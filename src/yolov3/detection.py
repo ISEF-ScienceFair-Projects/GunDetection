@@ -66,7 +66,7 @@ class GunDetection:
 
             if gun_detected_this_iteration:
                 consecutive_gun_detected_count += 1
-                if consecutive_gun_detected_count == buffer_iteration_count:
+                if consecutive_gun_detected_count >= buffer_iteration_count:
                     print("Gunman detected for", buffer_iteration_count, "ticks. Clothes detection gonna fire!!")
                     for i in range(len(cordlist)):
                         if cordlist[i][0] > 0:
@@ -77,15 +77,14 @@ class GunDetection:
                     #cm.text('mms',
                     #        message='monkey spoted. engage in evasive manuvars. go go gadget go!',
                     #        file_path='gunImages/gunMan.jpg', number=2142184754, provider="T-Mobile")
-                    yield True
+                    return True
             else:
                 consecutive_gun_detected_count = 0
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        yield False
-
+        return False
 
 class ClothesDetection:
     def __init__(self, num_cameras: int):

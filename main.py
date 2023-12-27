@@ -1,44 +1,29 @@
 import cv2
 from src.yolov3.detection import GunDetection, ClothesDetection
-from src.yolov3.arduinoBoard import sendP
-       
-
-def main():
-    weight_path_gun = 'model\yolo-obj_final.weights'
+from src.utils import sendP, find_guy, countCameras
+def main(tryall=True):
+    weight_path_gun = 'model/darknetGun.weights'
     config_path_gun = 'gun.cfg'
+    if not tryall:
+        cam1 = cv2.VideoCapture(0)
+        cam2 = cv2.VideoCapture(1)
+        #cam3 = cv2.VideoCapture(2)
+        cameras = [
+            (cam1, "Zone 1"), (cam2, 'Zone 2')
+        ]
+    else:
+        cameras = []
+        amt = countCameras()
+        for i in range(amt):
+            cameras.append((cv2.VideoCapture(i), f"Zone {i+1}"))
+
     gun_detection = GunDetection(weight_path_gun, config_path_gun)
-
-    cam1 = cv2.VideoCapture(0)
-    #cam2 = cv2.VideoCapture(1)
-    #cam3 = cv2.VideoCapture(2)
-    cameras = [
-        (cam1, "Zone 1")#, (cam2, 'Zone 2')
-    ]
-
-    for i in gun_detection.run_detection(cameras):
-        #print(f'{i}')
-        try:
-            if 1 in list(i.values()):
-                for key, value in i.items():
-                    if value == 1:
-                        print(f'Gunman in {key}')
-                        #sendP(key[-1])
-            else:
-                print('No Gunman found')
-
-            #sendP(i)
-            #if type(i) != int:
-            #   break
-        except AttributeError:
-            # if this is running we have had a gun man for more that 4 ticks 
-            print('you goofy goober')
-            #rammi
-            #have it run the clothes desction on the image here
-            #goofy goober
-
-
+    find_guy(gun_detection,cameras)
+    
     clothes_detection = ClothesDetection(len(cameras))
     clothes_detection.run_detection(cameras)
- 
+    next_gun_detection = GunDetection(weight_path_gun, config_path_gun)
+    while True:
+        find_guy(next_gun_detection,cameras)
 if __name__ == "__main__":
     main()
