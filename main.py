@@ -3,7 +3,7 @@ from src.yolov3.detection import GunDetection, ClothesDetection
 from src.utils import sendP, find_guy, countCameras
 
 def main(tryall=True):
-    weight_path_gun = 'model\yolo-obj_final.weights'
+    weight_path_gun = 'model/darknetGun.weights'
     config_path_gun = 'gun.cfg'
     gun_detection = GunDetection(weight_path_gun, config_path_gun)
 
@@ -34,6 +34,9 @@ def main(tryall=True):
         else:
             # if this is running we have had a gun man for more that 4 ticks 
             print('you goofy goober')
+            clothes_detection = ClothesDetection(len(cameras))
+            wearing,colour = clothes_detection.run_detection(cameras)
+            print(f"wearing {wearing} and RGB {colour}")
             #rammi
             #have it run the clothes desction on the image here
             #goofy goober

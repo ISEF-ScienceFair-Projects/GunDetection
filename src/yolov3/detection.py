@@ -138,7 +138,7 @@ class ClothesDetection:
         for cap in self.cap_list:
             cap.release()
         cv2.destroyAllWindows()
-        return True
+        return (gunman_is_wearing,avg_rgb_values)
     def get_avg_rgb(self, box_array: list, frame: np.ndarray) -> list:
         avg_rgb_values = []
 
