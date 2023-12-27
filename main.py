@@ -18,7 +18,7 @@ def main(tryall=True):
 
     for i in gun_detection.run_detection(cameras):
         #print(f'{i}')
-        #print(type(i))
+        print(type(i))
         if type(i) == dict:
             if 1 in list(i.values()):
                 for key, value in i.items():
