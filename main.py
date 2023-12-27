@@ -18,7 +18,8 @@ def main(tryall=True):
 
     for i in gun_detection.run_detection(cameras):
         #print(f'{i}')
-        try:
+        #print(type(i))
+        if type(i) == dict:
             if 1 in list(i.values()):
                 for key, value in i.items():
                     if value == 1:
@@ -30,7 +31,7 @@ def main(tryall=True):
             #sendP(i)
             #if type(i) != int:
             #   break
-        except AttributeError:
+        else:
             # if this is running we have had a gun man for more that 4 ticks 
             print('you goofy goober')
             #rammi
