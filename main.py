@@ -1,6 +1,6 @@
 import cv2
 from src.yolov3.detection import GunDetection, ClothesDetection
-from src.utils import sendP, find_guy, countCameras
+from src.utils import sendP, countCameras
 
 def main(tryall=True):
     weight_path_gun = 'model/darknetGun.weights'
@@ -8,7 +8,7 @@ def main(tryall=True):
     gun_detection = GunDetection(weight_path_gun, config_path_gun)
 
     if not tryall:
-        cam1 = cv2.VideoCapture(1)
+        cam1 = cv2.VideoCapture(0)
         #cam2 = cv2.VideoCapture(1)
         cameras = [
             (cam1, "Zone 1")#, (cam2, 'Zone 2')
@@ -38,9 +38,6 @@ def main(tryall=True):
             clothes_detection = ClothesDetection(len(cameras))
             wearing,colour = clothes_detection.run_detection(cameras)
             print(f"wearing {wearing} and RGB {colour}")
-            #rammi
-            #have it run the clothes desction on the image here
-            #goofy goober
 
 if __name__ == "__main__":
     main()
