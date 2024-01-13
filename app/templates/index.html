@@ -5,27 +5,33 @@
     <title>Title</title>
 
     <style>
-    	#video {
-    		-moz-transform:rotateY(180deg);
-    		-webkit-transform:rotateY(180deg); /* Safari and Chrome */
-    		transform: rotateY(180deg); /* Firefox */
-    		
-    	}
+        #video {
+    -moz-transform:rotateY(180deg);
+    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    transform: rotateY(180deg); /* Firefox */
+    flex: auto;
+}
+
+.container {
+    width: 100%;
+    margin: auto;
+    align-items: flex;
+    justify-content: flex;
+
+}
     </style>
-    
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
      <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.0/socket.io.js'></script>
 </head>
 
 <body>
 
-    <div id="container">
-    <video autoplay playsinline id="videoElement"></video>
-    <canvas id="canvas"  width="400" height="300"></canvas>
+    <div class="container">
+        <video autoplay playsinline id="videoElement"></video>
+        <canvas id="canvas"></canvas>
     </div>
 
-    <div class = 'video'>
-        <img id="photo"  width="400"  height="300">
+    <div class="video">
         <h1>video</h1>
     </div>
 
@@ -56,7 +62,7 @@
             });
         }
 
-        const FPS = 6;
+        const FPS = 60;
         setInterval(() => {
             width=video.width;
             height=video.height;
