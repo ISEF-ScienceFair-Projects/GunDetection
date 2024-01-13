@@ -1,7 +1,7 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+#plug in data
 conf_matrix = np.array([[79, 7],
                         [1, 0]])
 
