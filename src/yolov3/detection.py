@@ -166,24 +166,4 @@ class ClothesDetection:
         return avg_rgb_values
     def colour_from_RGB(avg_rgb_values):
         pass
-
-    def get_color_category(self, avg_rgb_values: list) -> str:
-        color_thresholds = {
-            'Red': (150, 30, 30),
-            'White': (220, 220, 220),
-            'Black': (30, 30, 30),
-            'Blue': (30, 30, 150),
-            'Green': (30, 150, 30)
-        }
-
-        min_distance = float('inf')
-        color_category = None
-
-        for category, threshold in color_thresholds.items():
-            distance = np.linalg.norm(np.array(avg_rgb_values) - np.array(threshold))
-            if distance < min_distance:
-                min_distance = distance
-                color_category = category
-
-        return color_category 
     
