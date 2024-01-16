@@ -25,10 +25,7 @@ class GunDetection:
             for cam, window_name in cameras:
                 ret, frame, boxes, cords = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
                 cordlist.append(cords)
-                #print(f'cam: {window_name}\ncords: {cords}')
                 if cords != (0,0,0,0):
-                    #print(f'Gun man is in {window_name}')
-                    #yield int(window_name[5])
                     gunManPos.update({window_name: 1})
 
                 else:
@@ -42,13 +39,6 @@ class GunDetection:
                 combined_frames.append(frame)
                 boxes_list.append(boxes)
             yield gunManPos
-            '''    
-            cv2.putText(frame, f"g", (int(cordlist[0][0]),int(cordlist[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(frame, f"a", (0,0), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(frame, f"(100,0)", (100,0), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(frame, f"(0,100)", (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            print(cordlist)
-            '''
             if not combined_frames:
                 break
             

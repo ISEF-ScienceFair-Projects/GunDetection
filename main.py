@@ -3,7 +3,7 @@ from src.yolov3.detection import GunDetection, ClothesDetection
 from src.utils import sendP, countCameras
 
 def main(tryall=True):
-    weight_path_gun = 'model/darknetGun.weights'
+    weight_path_gun = 'model/V3.weights'
     config_path_gun = 'gun.cfg'
     gun_detection = GunDetection(weight_path_gun, config_path_gun)
 
