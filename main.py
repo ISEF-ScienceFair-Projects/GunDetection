@@ -9,7 +9,7 @@ def main(tryall=True):
 
     if not tryall:
         cam1 = cv2.VideoCapture(1)
-        #cam2 = cv2.VideoCapture(1)
+        #cam2 = cv2.VideoCapture(0)
         cameras = [
             (cam1, "Zone 1")#, (cam2, 'Zone 2')
         ]
@@ -17,42 +17,27 @@ def main(tryall=True):
         cameras = [(cv2.VideoCapture(i), f"Zone {i+1}") for i in range(countCameras())]
 
     for i in gun_detection.run_detection(cameras):
-        #print(f'{i}')
         print(type(i))
         if type(i) == dict:
             if 1 in list(i.values()):
                 for key, value in i.items():
                     if value == 1:
                         print(f'Gunman in {key}')
-                        #sendP(key[-1])
             else:
                 print('No Gunman found')
-
-            #sendP(i)
-            #if type(i) != int:
-            #   break
         else:
-            # if this is running we have had a gun man for more that 4 ticks 
-            print('you goofy goober')
-            clothes_detection = ClothesDetection(len(cameras))
+            clothes_detection = ClothesDetection(len(cameras),cameras)
             wearing,colour = clothes_detection.run_detection(cameras)
             print(f"wearing {wearing} and RGB {colour}")
-            while True:
-                    for i in gun_detection.run_detection(cameras):
-                        #print(f'{i}')
+            for i in gun_detection.run_detection(cameras):
                         print(type(i))
                         if type(i) == dict:
                             if 1 in list(i.values()):
                                 for key, value in i.items():
                                     if value == 1:
                                         print(f'Gunman in {key}')
-                                        #sendP(key[-1])
                             else:
                                 print('No Gunman found')
-
-                            #sendP(i)
-                            #if type(i) != int:
-                            #   break
-
+    gun_detection.run_detection(cameras)                  
 if __name__ == "__main__":
     main(tryall=False)
