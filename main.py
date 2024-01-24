@@ -1,11 +1,11 @@
 import cv2
-from src.yolov3.detection import GunDetection, ClothesDetection
+from src.yolov8.detection import GunDetection, ClothesDetection
 from src.utils import sendP, countCameras
 
 def main(tryall=True):
-    weight_path_gun = 'model/V3.weights'
+    weight_path_gun = 'model/runs/detect/train7/weights/best.pt'
     config_path_gun = 'gun.cfg'
-    gun_detection = GunDetection(weight_path_gun, config_path_gun)
+    gun_detection = GunDetection(weight_path_gun)
 
     if not tryall:
         cam1 = cv2.VideoCapture(1)
@@ -56,6 +56,3 @@ def main(tryall=True):
 
 if __name__ == "__main__":
     main(tryall=False)
-    
-#test
- 
