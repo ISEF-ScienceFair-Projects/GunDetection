@@ -30,14 +30,14 @@ def main(tryall=True):
             wearing,colour = clothes_detection.run_detection(cameras)
             print(f"wearing {wearing} and RGB {colour}")
             for i in gun_detection.run_detection(cameras):
-                        print(type(i))
-                        if type(i) == dict:
-                            if 1 in list(i.values()):
-                                for key, value in i.items():
-                                    if value == 1:
-                                        print(f'Gunman in {key}')
-                            else:
-                                print('No Gunman found')
+                print(type(i))
+                if type(i) == dict:
+                    if 1 in list(i.values()):
+                        for key, value in i.items():
+                            if value == 1:
+                                print(f'Gunman in {key}')
+                    else:
+                        print('No Gunman found')
     gun_detection.run_detection(cameras)                  
 if __name__ == "__main__":
     main(tryall=False)
