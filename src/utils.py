@@ -2,18 +2,6 @@ from typing import List, Dict
 import serial
 import cv2
 
-def find_guy(gun_detection,cameras):
-        for i in gun_detection.run_detection(cameras):
-            if 1 in list(i.values()):
-                for key, value in i.items():
-                    if value == 1:
-                        print(f'Gunman in {key}')
-            else:
-                print('No Gunman found')
-
-            #sendP(i)
-            #if type(i) != int:
-            #   break
 def countCameras(maxCam: int = 10) -> int:
     n = 0
     for i in range(maxCam):
