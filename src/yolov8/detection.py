@@ -11,7 +11,7 @@ class GunDetection:
     def __init__(self, weight_path: str):
         self.yolo_detector = YoloObjD(weight_path)
     
-    def run_detection(self, cameras: list, single_frame_mode: bool = False, single_frame_path: str = None) -> bool:
+    def run_detection(self, cameras: list) -> bool:
         consecutive_gun_detected_count = 0
         buffer_iteration_count = 4
         start_time = time.time()
@@ -23,7 +23,7 @@ class GunDetection:
             gunManPos = {}
 
             for cam, window_name in cameras:
-                ret, frame, boxes, cords = run(self.yolo_detector, cam, window_name, single_frame_mode, single_frame_path)
+                ret, frame, boxes, cords = run(self.yolo_detector, cam, window_name)
                 cordlist.append(cords)
                 if cords != (0,0,0,0):
                     gunManPos.update({window_name: 1})
@@ -77,11 +77,11 @@ class GunDetection:
         yield False
 
 class ClothesDetection:
-    def __init__(self, num_cameras: int, isframe=False, frame=None):
+    def __init__(self, num_cameras, cap_list, isframe=False, frame=None):
         self.isframe = isframe
         if not self.isframe:
             self.models = [Load_DeepFashion2_Yolov3() for _ in range(num_cameras)]
-            self.cap_list = [cv2.VideoCapture(i) for i in range(num_cameras)]
+            self.cap_list = cap_list
         else:
             self.models = [Load_DeepFashion2_Yolov3()]
             self.frame = frame
@@ -90,9 +90,9 @@ class ClothesDetection:
     def run_detection(self, cameras: list):
         gunman_is_wearing = ""
         avg_rgb_values = []
-        while len(gunman_is_wearing)==0:
+        while len(gunman_is_wearing) == 0:
             if not self.isframe:
-                frames = [cap.read()[1] for cap in self.cap_list]
+                frames = [cap[0].read()[1] for cap in self.cap_list]
                 ret_list = [frame is not None for frame in frames]
                 if not all(ret_list):
                     break
@@ -141,7 +141,7 @@ class ClothesDetection:
                 break
         if not self.isframe:
             for cap in self.cap_list:
-                cap.release()
+                cap[0].release()
             cv2.destroyAllWindows()
         return (gunman_is_wearing,avg_rgb_values)
     def get_avg_rgb(self, box_array: list, frame: np.ndarray) -> list:
