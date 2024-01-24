@@ -2,3 +2,5 @@ cloth/built_model/
 model/
 password.txt
 data_new/
+.hintrc
+.DS_Store
