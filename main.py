@@ -4,7 +4,7 @@ from src.utils import sendP, countCameras
 
 def main(tryall=True):
     weight_path_gun = 'model/runs/detect/train7/weights/best.pt'
-    config_path_gun = 'gun.cfg'
+    config_path_gun = 'model/gun.cfg'
     gun_detection = GunDetection(weight_path_gun)
 
     if not tryall:
