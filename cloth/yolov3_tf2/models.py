@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model
-from tensorflow.keras.layers import (
+from keras import Model
+from keras.layers import (
     Add,
     Concatenate,
     Conv2D,
@@ -12,8 +12,8 @@ from tensorflow.keras.layers import (
     UpSampling2D,
     ZeroPadding2D,
 )
-from tensorflow.keras.regularizers import l2
-from tensorflow.keras.losses import (
+from keras.regularizers import l2
+from keras.losses import (
     binary_crossentropy,
     sparse_categorical_crossentropy
 )

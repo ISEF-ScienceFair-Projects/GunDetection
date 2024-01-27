@@ -3,8 +3,8 @@ from src.yolov8.detection import GunDetection, ClothesDetection
 from src.utils import sendP, countCameras
 
 def main(tryall=True):
-    weight_path_gun = 'model/runs/detect/train7/weights/best.pt'
-    config_path_gun = 'model/gun.cfg'
+    weight_path_gun = 'model/yolov8_SciFair/runs/detect/train4/weights/best.pt'
+    config_path_gun = 'model/gun.cfg' #for yolov4
     gun_detection = GunDetection(weight_path_gun)
 
     if not tryall:
