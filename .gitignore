@@ -3,4 +3,4 @@ model/
 password.txt
 data/
 .hintrc
-.DS_Store
+**/.DS_Store
