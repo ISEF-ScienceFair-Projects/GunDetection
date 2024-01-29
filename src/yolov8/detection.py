@@ -49,7 +49,7 @@ class GunDetection:
             fps = len(cameras) / elapsed_time
             cv2.putText(combined_frame, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            cv2.imshow("Combined Cameras", combined_frame)
+            #cv2.imshow("Combined Cameras", combined_frame)
 
             gun_detected_this_iteration = any(boxes > 0 for _, boxes in combined_frames_resized)
             print(f"{gun_detected_this_iteration}, {[boxes for _, boxes in combined_frames_resized]}")

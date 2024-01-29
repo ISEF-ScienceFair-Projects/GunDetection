@@ -17,8 +17,8 @@ class YoloObjD:
         confidences = []
         boxes = []
         x = y = w= h = 0
-        threshold = 0.9
-        results = self.model.predict(frame,imgsz=640,conf=threshold)
+        threshold = 0.7
+        results = self.model(frame, show=True)
         names = self.model.names
         for result in results:
             boxes = result.boxes.xyxy 
@@ -27,8 +27,8 @@ class YoloObjD:
                 y = int(box[1])
                 w = int(box[2]-box[0])
                 h = int(box[3]-box[1])
-                cv2.rectangle(img, (x, y), (x + w, y + h), self.colors, 2)
-                cv2.putText(img, names[int(box[-1])], (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.fontcolors, 2)
+                #cv2.rectangle(img, (x, y), (x + w, y + h), self.colors, 2)
+                #cv2.putText(img, names[int(box[-1])], (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.fontcolors, 2)
         return img, len(boxes),(x,y,w,h)
 
     def calculate_contrast_font_color(self, img: np.ndarray, x: int, y: int, w: int, h: int) -> list:

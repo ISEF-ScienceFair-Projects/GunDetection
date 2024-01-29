@@ -2,8 +2,8 @@ import cv2
 from src.yolov8.detection import GunDetection, ClothesDetection
 from src.utils import sendP, countCameras
 
-def main(tryall=True):
-    weight_path_gun = 'model/yolov8_SciFair/runs/detect/train4/weights/best.pt'
+def main(tryall=True, recursive=True):
+    weight_path_gun = 'model/yolov8/our_dataset/runs/detect/train4/weights/best.pt'
     config_path_gun = 'model/gun.cfg' #for yolov4
     gun_detection = GunDetection(weight_path_gun)
 
@@ -25,19 +25,13 @@ def main(tryall=True):
                         print(f'Gunman in {key}')
             else:
                 print('No Gunman found')
-        else:
+        elif recursive:
             clothes_detection = ClothesDetection(len(cameras),cameras)
             wearing,colour = clothes_detection.run_detection(cameras)
             print(f"wearing {wearing} and RGB {colour}")
-            for i in gun_detection.run_detection(cameras):
-                print(type(i))
-                if type(i) == dict:
-                    if 1 in list(i.values()):
-                        for key, value in i.items():
-                            if value == 1:
-                                print(f'Gunman in {key}')
-                    else:
-                        print('No Gunman found')
+            main(tryall=tryall, recursive=False)
+        else:
+            main(tryall=tryall, recursive=False)
     gun_detection.run_detection(cameras)                  
 if __name__ == "__main__":
     main(tryall=False)
