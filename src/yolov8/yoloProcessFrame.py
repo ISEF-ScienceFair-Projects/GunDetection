@@ -17,8 +17,8 @@ class YoloObjD:
         confidences = []
         boxes = []
         x = y = w= h = 0
-        threshold = 0.7
-        results = self.model(frame, show=True)
+        threshold = 0.5
+        results = self.model(frame, show=True, conf=threshold)
         names = self.model.names
         for result in results:
             boxes = result.boxes.xyxy 

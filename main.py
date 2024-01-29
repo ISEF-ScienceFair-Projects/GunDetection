@@ -3,15 +3,15 @@ from src.yolov8.detection import GunDetection, ClothesDetection
 from src.utils import sendP, countCameras
 
 def main(tryall=True, recursive=True):
-    weight_path_gun = 'model/yolov8/our_dataset/runs/detect/train4/weights/best.pt'
+    weight_path_gun = 'model/yolov8/pistols_dataset/runs/detect/train/weights/best.pt'
     config_path_gun = 'model/gun.cfg' #for yolov4
     gun_detection = GunDetection(weight_path_gun)
 
     if not tryall:
-        cam1 = cv2.VideoCapture(1)
-        cam2 = cv2.VideoCapture(0)
+        cam1 = cv2.VideoCapture("data/testing/vid1.mp4")
+        #cam2 = cv2.VideoCapture(0)
         cameras = [
-            (cam1, "Zone 1"), (cam2, 'Zone 2')
+            (cam1, "Zone 1")#, (cam2, 'Zone 2')
         ]
     else:
         cameras = [(cv2.VideoCapture(i), f"Zone {i+1}") for i in range(countCameras())]
