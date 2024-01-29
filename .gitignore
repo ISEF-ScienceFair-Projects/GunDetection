@@ -4,3 +4,5 @@ password.txt
 data/
 .hintrc
 **/.DS_Store
+**/__pycache__
+**/*.pyc
