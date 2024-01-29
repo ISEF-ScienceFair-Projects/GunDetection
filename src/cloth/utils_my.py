@@ -10,7 +10,7 @@ import time
 import tensorflow as tf
 import cv2
 
-from cloth.yolov3_tf2.models import YoloV3
+from src.cloth.yolov3_tf2.models import YoloV3
 
 
 def Draw_Bounding_Box(img, list_obj):

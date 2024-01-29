@@ -4,7 +4,7 @@ import time
 from src.yolov8.yoloProcessFrame import YoloObjD, run
 import numpy as np
 import time
-from cloth.cloth_detection import Draw_Bounding_Box, Detect_Clothes, Load_DeepFashion2_Yolov3
+from src.cloth.cloth_detection import Draw_Bounding_Box, Detect_Clothes, Load_DeepFashion2_Yolov3
 import tensorflow as tf
 
 class GunDetection:
