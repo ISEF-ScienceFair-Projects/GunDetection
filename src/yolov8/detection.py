@@ -23,27 +23,25 @@ class GunDetection:
             gunManPos = {}
 
             for cam, window_name in cameras:
-                ret, frame, boxes, cords = run(self.yolo_detector, cam, window_name)
-                cordlist.append(cords)
-                if cords != (0,0,0,0):
-                    gunManPos.update({window_name: 1})
-
-                else:
-                    gunManPos.update({window_name: 0})
-
+                ret, frame = cam.read()
                 cv2.putText(frame, f"{window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 
                 if not ret:
                     continue
 
                 combined_frames.append(frame)
-                boxes_list.append(boxes)
+            combined_frames_resized = [cv2.resize(frame, None, fx=2, fy=2) for frame in combined_frames]
+            combined_frame = np.hstack([frame for frame in combined_frames_resized])
+            ret, frame, boxes, cords = run(self.yolo_detector, combined_frame, window_name)
+            boxes_list.append(boxes)
+            cordlist.append(cords)
+            if cords != (0,0,0,0):
+                gunManPos.update({window_name: 1})
+            else:
+                gunManPos.update({window_name: 0})
             yield gunManPos
             if not combined_frames:
                 break
-            
-            combined_frames_resized = [(cv2.resize(frame, None, fx=2, fy=2), boxes) for frame, boxes in zip(combined_frames, boxes_list)]
-            combined_frame = np.hstack([frame for frame, _ in combined_frames_resized])
 
             elapsed_time = time.time() - start_time
             fps = len(cameras) / elapsed_time
@@ -51,8 +49,8 @@ class GunDetection:
 
             #cv2.imshow("Combined Cameras", combined_frame)
 
-            gun_detected_this_iteration = any(boxes > 0 for _, boxes in combined_frames_resized)
-            print(f"{gun_detected_this_iteration}, {[boxes for _, boxes in combined_frames_resized]}")
+            gun_detected_this_iteration = any(boxes > 0 for boxes in boxes_list)
+            print(f"{gun_detected_this_iteration}, {[boxes for boxes in boxes_list]}")
 
             if gun_detected_this_iteration:
                 consecutive_gun_detected_count += 1

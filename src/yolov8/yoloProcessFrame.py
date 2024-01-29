@@ -35,11 +35,7 @@ class YoloObjD:
         contrast_color = [0, 0, 0]
         return contrast_color
 
-def run(yolo_detector: YoloObjD, cam: cv2.VideoCapture, window_name: str) -> tuple:
-    ret, frame_info = cam.read()
-    if not ret:
-        return False, None, 0,-1
-    
-    frame, boxes,cords = yolo_detector.process_frame(frame_info)
+def run(yolo_detector: YoloObjD, frame: np.ndarray, window_name: str) -> tuple:
+    frame_info, boxes,cords = yolo_detector.process_frame(frame)
     print(boxes)
-    return True, frame, boxes,cords
+    return True, frame_info, boxes,cords

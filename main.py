@@ -9,9 +9,9 @@ def main(tryall=True, recursive=True):
 
     if not tryall:
         cam1 = cv2.VideoCapture(1)
-        #cam2 = cv2.VideoCapture(0)
+        cam2 = cv2.VideoCapture(0)
         cameras = [
-            (cam1, "Zone 1")#, (cam2, 'Zone 2')
+            (cam1, "Zone 1"), (cam2, 'Zone 2')
         ]
     else:
         cameras = [(cv2.VideoCapture(i), f"Zone {i+1}") for i in range(countCameras())]
