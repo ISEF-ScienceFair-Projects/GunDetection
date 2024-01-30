@@ -25,7 +25,10 @@ class GunDetection:
             for cam, window_name in cameras:
                 ret, frame = cam.read()
                 cv2.putText(frame, f"{window_name}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                
+                elapsed_time = time.time() - start_time
+                fps = len(cameras) / elapsed_time
+                cv2.putText(frame, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                start_time = time.time()
                 if not ret:
                     continue
 
@@ -42,12 +45,6 @@ class GunDetection:
             yield gunManPos
             if not combined_frames:
                 break
-
-            elapsed_time = time.time() - start_time
-            fps = len(cameras) / elapsed_time
-            cv2.putText(combined_frame, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-
-            #cv2.imshow("Combined Cameras", combined_frame)
 
             gun_detected_this_iteration = any(boxes > 0 for boxes in boxes_list)
             print(f"{gun_detected_this_iteration}, {[boxes for boxes in boxes_list]}")

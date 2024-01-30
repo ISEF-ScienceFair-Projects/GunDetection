@@ -64,7 +64,9 @@ class YoloObjD:
         return img, len(boxes),(x,y,w,h)
 
     def calculate_contrast_font_color(self, img: np.ndarray, x: int, y: int, w: int, h: int) -> list:
-        contrast_color = [0, 0, 0]
+        roi = img[y:y+h, x:x+w]
+        avg_color = np.mean(roi, axis=(0, 1))
+        contrast_color = [255 - int(avg_color[0]), 255 - int(avg_color[1]), 255 - int(avg_color[2])]
         return contrast_color
 
 def run(yolo_detector: YoloObjD, cam: cv2.VideoCapture, window_name: str, single_frame_mode: bool = False, single_frame_path: str = None) -> tuple:
