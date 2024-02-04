@@ -5,7 +5,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
-from GatewayTexting.providers import PROVIDERS
+from src.GatewayTexting.providers import PROVIDERS
 
 def send_sms_via_email(number: str, message: str, provider: str, sender_credentials: tuple,
                        subject: str = "sent using etext", smtp_server: str = "smtp.gmail.com", smtp_port: int = 465):

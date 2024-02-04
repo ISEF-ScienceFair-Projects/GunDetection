@@ -6,7 +6,7 @@ import numpy as np
 import time
 from src.cloth.cloth_detection import Draw_Bounding_Box, Detect_Clothes, Load_DeepFashion2_Yolov3
 import tensorflow as tf
-
+import src.GatewayTexting.callMeMaybe as cm
 class GunDetection:
     def __init__(self, weight_path: str):
         self.yolo_detector = YoloObjD(weight_path)
@@ -113,9 +113,9 @@ class ClothesDetection:
 
                 if box_array and not gunman_is_wearing:
                     gunman_is_wearing = text
-                    #cm.text('sms',
-                    #        message=f'Gunman is wearing {gunman_is_wearing}', 
-                    #        number=2142184754, provider="T-Mobile")
+                    cm.text('sms',
+                            message=f'Gunman is wearing {gunman_is_wearing}', 
+                            number=2142184754, provider="T-Mobile")
                     avg_rgb_values = self.get_avg_rgb(box_array, frames[i])
                     print(avg_rgb_values)
 

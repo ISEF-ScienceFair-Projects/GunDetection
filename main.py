@@ -8,7 +8,7 @@ def main(tryall=True, recursive=True):
     gun_detection = GunDetection(weight_path_gun)
 
     if not tryall:
-        cam1 = cv2.VideoCapture("data/testing/vid1.mp4")
+        cam1 = cv2.VideoCapture(0)
         #cam2 = cv2.VideoCapture(0)
         cameras = [
             (cam1, "Zone 1")#, (cam2, 'Zone 2')

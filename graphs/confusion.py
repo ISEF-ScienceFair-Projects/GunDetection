@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 #plug in data
 conf_matrix = np.array([[79, 7],
-                        [1, 0]])
+                        [1, 53]])
 
 sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", 
             xticklabels=["Gun", "No Gun"],
@@ -11,7 +11,7 @@ sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues",
 
 plt.xlabel("Predicted Label")
 plt.ylabel("True Label")
-plt.title("Confusion Matrix of V2")
+plt.title("Confusion Matrix of Final Model")
 
 plt.show()
 
