@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
 from src.GatewayTexting.providers import PROVIDERS
-
+import time
 def send_sms_via_email(number: str, message: str, provider: str, sender_credentials: tuple,
                        subject: str = "sent using etext", smtp_server: str = "smtp.gmail.com", smtp_port: int = 465):
     sender_email, email_password = sender_credentials
@@ -60,7 +60,9 @@ def text(ty='sms', number=4693330263, message='no message was added', file_path=
         print(f'"{message}" sent to {number} with attachment at "{file_path}"')
 
 def main():
-    text('mms', message=' mom', file_path='gunImages\gunMan.jpg')
+    text('mms', message='Person of interest located in Zone 1 carrying a Pistol. Please respond quickly', file_path='gunImages/gunMan.jpg')
+    time.sleep(10)
+    text('sms', message='Person of interst wearing blue trousers. Still located in Zone 1. Please respond quickly.')
 
 if __name__ == "__main__":
     main()
