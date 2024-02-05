@@ -46,8 +46,8 @@ def Draw_Bounding_Box(img, list_obj):
         text = '{}: {:.2f}'.format(obj['label'], obj['confidence'])
 
         # draw bounding box and labels
-        img = cv2.rectangle(img, (x1, y1), (x2, y2), color, 4)
-        img = cv2.putText(img, text, (x1, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2, cv2.LINE_AA)
+        img = cv2.rectangle(img, (x1, y1), (x2, y2), [255,255,255], 4)
+        img = cv2.putText(img, text, (x1, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1, [255,255,255], 2, cv2.LINE_AA)
         cv2.imwrite("gunImages/cloth.jpg", img)
     return img,arr,text
 

@@ -18,7 +18,7 @@ class YoloObjD:
         boxes = []
         x = y = w= h = 0
         threshold = 0.5
-        results = self.model(frame, show=True, conf=threshold)
+        results = self.model(frame, show=True, conf=threshold, device="mps")
         names = self.model.names
         for result in results:
             boxes = result.boxes.xyxy 
