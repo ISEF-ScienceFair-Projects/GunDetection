@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-filled_data = pd.read_csv('model/yolov8/5K_dataset_29epochs/runs/detect/train/weights/final.csv')
+filled_data = pd.read_csv('model/Final_YOLOV8_Model_bestone/train2/results.csv')
 
 plt.figure(figsize=(10, 5))
 plt.subplot(1, 2, 1)

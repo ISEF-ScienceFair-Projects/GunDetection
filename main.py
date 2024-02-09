@@ -3,7 +3,7 @@ from src.yolov8.detection import GunDetection, ClothesDetection
 from src.utils import sendP, countCameras
 
 def main(tryall=True, recursive=True):
-    weight_path_gun = 'model/yolov8/5K_dataset_29epochs/runs/detect/train/weights/best.pt'
+    weight_path_gun = 'model/Final_YOLOV8_Model_bestone/train2/weights/best.pt'
     config_path_gun = 'model/gun.cfg' #for yolov4
     gun_detection = GunDetection(weight_path_gun)
 
