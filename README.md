@@ -11,7 +11,7 @@ In 2021, 48,830 people died from gun-related injuries in the U.S., according to 
 Download Gun model weights and Darknet clothes detection weights
 
 ## Password for Texting
-`https://drive.google.com/drive/folders/10lVkmILzi5nVou20RG_yyEVbyhk1iEXK`
+[not here]
 
 Download this file and put it in the same directory as main.py in the gateway texting folder
 
